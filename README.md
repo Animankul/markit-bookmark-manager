@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🔖 MarkIt — Smart Bookmark Manager
 
-## Getting Started
+MarkIt is a modern bookmark management web application built using Next.js, Supabase, and Tailwind CSS. It allows users to save, organize, and access bookmarks from anywhere with a clean UI and realtime updates.
 
-First, run the development server:
+🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+✅ Google Authentication (Supabase Auth)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+✅ Secure user-based bookmarks (Row Level Security)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+✅ Add, delete, and manage bookmarks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+✅ Edit bookmark title and URL
 
-## Learn More
+✅ Favorite bookmarks support ⭐
 
-To learn more about Next.js, take a look at the following resources:
+✅ Search and sorting (Newest, Oldest, A–Z)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+✅ Copy link to clipboard
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+✅ Realtime updates using Supabase Realtime
 
-## Deploy on Vercel
+✅ Responsive and modern UI
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+✅ Clean dashboard with statistics
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+🛠 Tech Stack
+
+Frontend: Next.js, React.js
+
+Backend: Supabase (Database + Auth + Realtime)
+
+Styling: Tailwind CSS
+
+Icons: Lucide React
+
+Notifications: React Hot Toast
+
+
+⚡ Challenges Faced while developing MarkIt
+
+I am a MERN stack developer and have previously built multiple web and mobile applications using React.js, React Native, Node.js, Express, and MongoDB, including secure authentication using JWT.
+
+This project was my first experience using Supabase as a backend and implementing Google OAuth authentication, which was completely new to me. I faced challenges during the initial setup, authentication configuration, and realtime database integration. However, overcoming these challenges helped me understand backend-as-a-service concepts better, and it was an exciting learning experience exploring new technologies beyond the traditional MERN stack.
+
+
+📌 Future Improvements
+
+Folder / category-based bookmarks
+
+Tags and filtering
+
+Bookmark sharing
+
+Browser extension support
+
+Dark mode
+
+
+👨‍💻 Author
+
+Anish Kulkarni
+Full Stack Developer (MERN Stack)
