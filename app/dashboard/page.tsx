@@ -4,48 +4,76 @@ import AddBookmark from "@/components/bookmarks/AddBookmark";
 import BookmarkList from "@/components/bookmarks/BookmarkList";
 import useAuth from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabaseClient";
-import { Bookmark, LogOut, Search } from "lucide-react";
+import { Bookmark as BookmarkIcon, LogOut, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+
+/* =========================
+   TYPES
+========================= */
+
+type Bookmark = {
+  id: string;
+  title: string;
+  url: string;
+  user_id: string;
+  created_at: string;
+  is_favorite: boolean;
+  favicon?: string | null;
+};
+
+/* =========================
+   COMPONENT
+========================= */
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  const [bookmarks, setBookmarks] = useState([]);
-  const [sort, setSort] = useState("newest");
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [sort, setSort] = useState<"newest" | "oldest" | "az">("newest");
   const [search, setSearch] = useState("");
 
-  // ================= FETCH =================
+  /* =========================
+     FETCH BOOKMARKS
+  ========================= */
   const fetchBookmarks = async () => {
     const { data, error } = await supabase
       .from("bookmarks")
       .select("*");
 
-    if (error) return toast.error("Failed to fetch");
+    if (error) {
+      toast.error("Failed to fetch bookmarks");
+      return;
+    }
 
-    let sorted = data || [];
+    let sorted: Bookmark[] = data || [];
 
-    if (sort === "newest")
+    if (sort === "newest") {
       sorted.sort((a, b) =>
         b.created_at.localeCompare(a.created_at)
       );
+    }
 
-    if (sort === "oldest")
+    if (sort === "oldest") {
       sorted.sort((a, b) =>
         a.created_at.localeCompare(b.created_at)
       );
+    }
 
-    if (sort === "az")
+    if (sort === "az") {
       sorted.sort((a, b) =>
         a.title.localeCompare(b.title)
       );
+    }
 
     setBookmarks(sorted);
   };
 
-  // ================= LOGOUT =================
+  /* =========================
+     LOGOUT
+  ========================= */
   const handleLogout = () => {
     toast((t) => (
       <div className="flex flex-col gap-2">
@@ -73,24 +101,44 @@ export default function Dashboard() {
     ));
   };
 
+  /* =========================
+     AUTH PROTECTION
+  ========================= */
   useEffect(() => {
-    if (!loading && !user) router.push("/");
-  }, [user, loading]);
+    if (!loading && !user) {
+      router.push("/");
+    }
+  }, [user, loading, router]);
 
+  /* =========================
+     INITIAL LOAD
+  ========================= */
   useEffect(() => {
     if (user) fetchBookmarks();
   }, [user, sort]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return <p className="text-center mt-10">Loading...</p>;
+  }
 
-  // ================= FILTER =================
-  const filtered = bookmarks.filter((b) =>
+  /* =========================
+     FILTERING
+  ========================= */
+  const filteredBookmarks = bookmarks.filter((b) =>
     b.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  const favorites = filtered.filter((b) => b.is_favorite);
-  const normal = filtered.filter((b) => !b.is_favorite);
+  const favorites = filteredBookmarks.filter(
+    (b) => b.is_favorite
+  );
 
+  const normalBookmarks = filteredBookmarks.filter(
+    (b) => !b.is_favorite
+  );
+
+  /* =========================
+     UI
+  ========================= */
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100">
 
@@ -99,7 +147,7 @@ export default function Dashboard() {
         <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
 
           <div className="flex items-center gap-2 text-indigo-600">
-            <Bookmark size={22} />
+            <BookmarkIcon size={22} />
             <h1 className="text-xl font-bold">MarkIt</h1>
           </div>
 
@@ -120,12 +168,16 @@ export default function Dashboard() {
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-5 rounded-xl shadow">
             <p className="text-sm opacity-80">Total Bookmarks</p>
-            <p className="text-3xl font-bold">{bookmarks.length}</p>
+            <p className="text-3xl font-bold">
+              {bookmarks.length}
+            </p>
           </div>
 
           <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white p-5 rounded-xl shadow">
             <p className="text-sm opacity-80">Favorites</p>
-            <p className="text-3xl font-bold">{favorites.length}</p>
+            <p className="text-3xl font-bold">
+              {favorites.length}
+            </p>
           </div>
         </div>
 
@@ -136,6 +188,7 @@ export default function Dashboard() {
             <input
               placeholder="Search bookmarks..."
               className="w-full py-3 outline-none"
+              value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
@@ -143,7 +196,9 @@ export default function Dashboard() {
           <select
             className="bg-white rounded-xl px-4 shadow-sm"
             value={sort}
-            onChange={(e) => setSort(e.target.value)}
+            onChange={(e) =>
+              setSort(e.target.value as "newest" | "oldest" | "az")
+            }
           >
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
@@ -151,6 +206,7 @@ export default function Dashboard() {
           </select>
         </div>
 
+        {/* ADD BOOKMARK */}
         <AddBookmark
           user={user}
           refreshBookmarks={fetchBookmarks}
@@ -162,6 +218,7 @@ export default function Dashboard() {
             <h3 className="font-semibold mb-3 text-yellow-600">
               ⭐ Favorites
             </h3>
+
             <BookmarkList
               bookmarks={favorites}
               refreshBookmarks={fetchBookmarks}
@@ -169,13 +226,13 @@ export default function Dashboard() {
           </>
         )}
 
-        {/* ALL */}
+        {/* ALL BOOKMARKS */}
         <h3 className="font-semibold mt-6 mb-3">
           All Bookmarks
         </h3>
 
         <BookmarkList
-          bookmarks={normal}
+          bookmarks={normalBookmarks}
           refreshBookmarks={fetchBookmarks}
         />
       </main>
